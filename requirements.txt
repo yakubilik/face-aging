@@ -1,0 +1,22 @@
+# Core dependencies
+fastapi
+uvicorn[standard]
+pydantic
+
+# Image processing
+Pillow
+opencv-python
+dlib
+face_recognition
+
+# Utilities
+numpy
+python-multipart
+
+# Additional dependencies
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+loguru
+replicate
+aiohttp
