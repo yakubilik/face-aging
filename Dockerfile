@@ -1,31 +1,43 @@
-# Use an official Python runtime as the base image
-FROM python:3.11-slim
+# Use PyTorch image with CUDA support
+FROM pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
 
-# Set the working directory in the container
+# Set environment variables
+ENV CUDA_HOME=/usr/local/cuda
+
+# Set working directory
 WORKDIR /app
 
-# Install system dependencies required for OpenCV, dlib, and other libraries
+# Install system dependencies including Ninja
 RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    build-essential \
+    cmake \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
     libxrender-dev \
+    ninja-build \
     libgl1-mesa-glx \
-    build-essential \
-    cmake \
-    wget \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the requirements file into the container
+# Upgrade pip
+RUN pip3 install --upgrade pip
+
+# Install Python packages
 COPY requirements.txt .
+RUN pip3 install -r requirements.txt
 
-# Install the Python dependencies
-RUN pip install -r requirements.txt
+# Download pretrained models
+RUN mkdir -p pretrained_models && \
+    pip install gdown && \
+    gdown "https://drive.google.com/u/0/uc?id=1XyumF6_fdAxFmxpFcmPf-q84LU_22EMC&export=download" -O pretrained_models/sam_ffhq_aging.pt && \
+    wget "https://github.com/italojs/facial-landmarks-recognition/raw/master/shape_predictor_68_face_landmarks.dat" -O pretrained_models/shape_predictor_68_face_landmarks.dat
 
-# Copy the rest of the application code into the container
-COPY . .
+# Copy the entire project
+COPY . /app
 
-# Expose the port that the app runs on
+# Expose the port the app runs on
 EXPOSE 8000
 
 # Command to run the application

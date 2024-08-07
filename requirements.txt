@@ -7,16 +7,16 @@ pydantic
 Pillow
 opencv-python
 dlib
-face_recognition
+face-recognition
+
+# Deep learning
+torch
+torchvision
 
 # Utilities
 numpy
 python-multipart
-
-# Additional dependencies
 python-jose[cryptography]
 passlib[bcrypt]
 python-dotenv
 loguru
-replicate
-aiohttp

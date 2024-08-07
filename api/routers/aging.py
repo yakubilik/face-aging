@@ -1,13 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from api.schemas import aging as aging_schema
-from api.services import aging as aging_service
+from api.services.aging import AgingService
 from typing import List
 from loguru import logger
 
 router = APIRouter()
+aging_service = AgingService()
 
-
-@router.post("/face-aging", response_model=List[aging_schema.AgedImage],status_code=200)
+@router.post("/face-aging", response_model=List[aging_schema.AgedImage], status_code=200)
 async def face_aging(
         input_data: aging_schema.AgeDetectionInput
 ) -> List[aging_schema.AgedImage]:
@@ -30,8 +30,7 @@ async def face_aging(
     try:
         logger.info("Received face aging request")
 
-        aging_service_instance = aging_service.AgingService()
-        aged_images = await aging_service_instance.process_face_aging(
+        aged_images = await aging_service.process_face_aging(
             input_data.base64_image,
             input_data.gender,
             input_data.cropping_model,

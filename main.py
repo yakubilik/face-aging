@@ -1,8 +1,5 @@
 from fastapi import FastAPI
 from api.routers import aging as aging_router
-from dotenv import load_dotenv
-
-load_dotenv()  # This loads the variables from .env
 
 app = FastAPI()
 app.include_router(aging_router.router)
